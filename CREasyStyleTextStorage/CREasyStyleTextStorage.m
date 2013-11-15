@@ -46,22 +46,23 @@
 }
 
 - (void)replaceCharactersInRange:(NSRange)range withString:(NSString *)str {
+    [self beginEditing];
     [self.backingStore replaceCharactersInRange:range withString:str];
     [self edited:NSTextStorageEditedCharacters
            range:range
   changeInLength:(NSInteger)str.length - (NSInteger)range.length];
+    [self endEditing];
 }
 
 - (void)setAttributes:(NSDictionary *)attrs range:(NSRange)range {
+    [self beginEditing];
     [self.backingStore setAttributes:attrs range:range];
     [self edited:NSTextStorageEditedAttributes range:range changeInLength:0];
+    [self endEditing];
 }
 
 - (void)processEditing {
-    
     NSAssert(self.attributes[kCRESTSDefaultAttributeKey] != nil, @"ERROR: CREasyStyleTextStorage default attributes not set");
-    
-    [super processEditing];
     [self addAttributes:self.attributes[kCRESTSDefaultAttributeKey]
                   range:NSMakeRange(0, self.string.length)];
     
@@ -77,6 +78,7 @@
 
         }
     }
+    [super processEditing];
 }
 
 
